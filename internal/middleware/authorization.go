@@ -1,12 +1,13 @@
-package middleware 
-import {
-	"errors"
-	"net/http" 
+package middleware
 
-	"github.com/yuvrajinbhakti/golang_api/internal/api"
-	"github.com/yuvrajinbhakti/golang_api/internal/tools"
+import (
+	"errors"
+	"net/http"
+
 	log "github.com/sirupsen/logrus"
-}
+	"github.com/yuvrajinbhakti/golang_api/api"
+	"github.com/yuvrajinbhakti/golang_api/internal/tools"
+)
 
 var UnAuthorizedError = errors.New("Invalid username or token") //custom unauthorized error 
 
@@ -21,15 +22,15 @@ func Authorization(next http.Handler) http.Handler{
 			return
 		}
 		var database *tools.DatabaseInterface
-		databse, err = tools.NewDatabase()
+		database, err = tools.NewDatabase()
 		if err != nil {
 			api.InternalErrorHandler(w)
 			return
 		}
 		var loginDetails *tools.LoginDetails 
 		loginDetails = (*database).GetUserLoginDetails(username)
-		if (loginDetails == nil || (token != (*&loginDetails).AuthToken)){
-			log.Error(unAuthorizedError)
+		if (loginDetails == nil || (token != (*loginDetails).AuthToken)){
+			log.Error(UnAuthorizedError)
 			api.RequestErrorHandler(w,UnAuthorizedError)
 			return
 		}

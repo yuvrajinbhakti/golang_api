@@ -20,7 +20,7 @@ var mockLoginDetails = map[string]LoginDetails{
 		Username: "marie",
 	},
 }
-var mockDetails = map[string]CoinDetails{
+var mockCoinDetails = map[string]CoinDetails{
 	"alex":{
 		Coins: 100,
 		Username: "alex",

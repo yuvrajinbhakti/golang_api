@@ -1,12 +1,14 @@
-package main 
+package main
 
-import {
+import (
 	"fmt"
 	"net/http"
+
 	"github.com/go-chi/chi"
+	log "github.com/sirupsen/logrus" // for logging
 	"github.com/yuvrajinbhakti/golang_api/internal/handlers"
-	log "github.com/sirupsen/logrus"  // for logging
-}
+)
+
 // go mod tidy -> to install all the dependencies
 
 func main(){

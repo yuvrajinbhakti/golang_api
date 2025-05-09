@@ -1,26 +1,28 @@
 package handlers
-import{
-	"net/http"
+
+import (
 	"encoding/json"
-	"github.com/yuvrajinbhak/golang-api/api"
+	"net/http"
+
 	log "github.com/sirupsen/logrus"
-	"github.com/gorilla/mux"
-}
+	"github.com/yuvrajinbhakti/golang_api/api"
+	"github.com/yuvrajinbhakti/golang_api/internal/tools"
+)
 
 func GetCoinBalance(w http.ResponseWriter, r *http.Request){
-	var params = api.CoinBalanceParams{}
-	var decoder *schema.Decoder = schema.NewDecoder()
-	var err error 
-	err = decoder.Decode(&params,r.URL.Query())
-	if err != nil{
-		log.Error("Error decoding request parameters: ", err)
+	var params = api.CoinBalanceParams{
+		Username: r.URL.Query().Get("username"),
+	}
+	
+	if params.Username == "" {
+		log.Error("Missing username parameter")
 		api.InternalErrorHandler(w)
 		return 
 	}
 
-	var database *tools.Database 
-	database,err = tools.NewDatabase()
-	if err !=nil{
+	var database *tools.DatabaseInterface 
+	database, err := tools.NewDatabase()
+	if err != nil {
 		api.InternalErrorHandler(w)
 		return 
 	}
@@ -28,14 +30,14 @@ func GetCoinBalance(w http.ResponseWriter, r *http.Request){
 	var tokenDetails *tools.CoinDetails
 	tokenDetails = (*database).GetUserCoins(params.Username)
 	if tokenDetails == nil{
-		log.Error(err)
+		log.Error("No coin details found for user")
 		api.InternalErrorHandler(w)
 		return 
 	}
 
 	var response = api.CoinBalanceResponse { 
 		Balance:  (*tokenDetails).Coins,
-		Code: http.StatusOk,
+		Code: http.StatusOK,
 	}
 
 	w.Header().Set("Content-Type", "application/json")

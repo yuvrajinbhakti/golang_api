@@ -1,9 +1,10 @@
-package handlers 
-import {
-	"github.com/go-chi/chi" 
+package handlers
+
+import (
+	"github.com/go-chi/chi"
 	chimiddle "github.com/go-chi/chi/middleware"
 	"github.com/yuvrajinbhakti/golang_api/internal/middleware"
-}
+)
 
 //middleware is a function that gets called before the primary function which handles the endpoint
 func Handler(r *chi.Mux){
@@ -13,7 +14,7 @@ r.Use(chimiddle.StripSlashes)
 
 r.Route("/account",func(router chi.Router){
 	router.Use(middleware.Authorization) // this middleware will check if use is authorized to access this data
- 	router.Get("/coins",GetCoinsBalance)
+ 	router.Get("/coins",GetCoinBalance)
 })
  
 }
